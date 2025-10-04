@@ -1,41 +1,24 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>小型數位繪本 DEMO</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>數位繪本 Demo</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="app">
-    <header class="topbar">
-      <h1 class="title">小型數位繪本 DEMO</h1>
-      <div class="controls">
-        <button id="btnPrev" aria-label="上一頁">◀</button>
-        <span id="pageInfo">1 / 5</span>
-        <button id="btnNext" aria-label="下一頁">▶</button>
-      </div>
-    </header>
-
-    <main class="stage" id="stage" tabindex="0" aria-live="polite">
-      <!-- Page image -->
-      <img id="pageImage" alt="繪本頁面" />
-      <!-- Caption / text -->
-      <div class="caption">
-        <p id="captionText"></p>
-      </div>
-    </main>
-
-    <footer class="bottombar">
-      <div class="progress">
-        <div id="progressBar"></div>
-      </div>
-      <div class="hint">
-        點擊左右按鈕或使用鍵盤 ← → 來翻頁；手機可左右滑動。
-      </div>
-    </footer>
+  <div class="title">數位繪本 Demo</div>
+  <div id="book">
+    <img id="image" src="" alt="page image">
+    <p id="text"></p>
   </div>
-
+  <div id="controls">
+    <button id="prevButton" disabled>上一頁</button>
+    <div id="progress">
+      <div id="progress-bar"></div>
+    </div>
+    <button id="nextButton">下一頁</button>
+  </div>
   <script src="script.js"></script>
 </body>
 </html>

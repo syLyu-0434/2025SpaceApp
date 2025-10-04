@@ -1,57 +1,71 @@
-// Minimal digital picture book logic
+// Array of pages for the picture book. Each page has an image and text.
 const PAGES = [
-  { img: "assets/page1.png", text: "第一頁：清晨的城市醒來了，小小的光在窗邊跳舞。" },
-  { img: "assets/page2.png", text: "第二頁：雲像輕柔的棉花糖，飄過學校的操場。" },
-  { img: "assets/page3.png", text: "第三頁：主角聽見風在耳邊說祕密，輕得像羽毛。" },
-  { img: "assets/page4.png", text: "第四頁：他把勇氣裝進口袋，準備踏出新的步伐。" },
-  { img: "assets/page5.png", text: "第五頁：日落把世界染成金色，故事暫時，說完了。" },
+  { img: 'assets/page1.png', text: '這是第一頁的文字內容。' },
+  { img: 'assets/page2.png', text: '這是第二頁的文字內容。' },
+  { img: 'assets/page3.png', text: '這是第三頁的文字內容。' },
+  { img: 'assets/page4.png', text: '這是第四頁的文字內容。' },
+  { img: 'assets/page5.png', text: '這是第五頁的文字內容。' }
 ];
 
-let current = 0;
-const pageImage = document.getElementById("pageImage");
-const captionText = document.getElementById("captionText");
-const pageInfo = document.getElementById("pageInfo");
-const progressBar = document.getElementById("progressBar");
-const btnPrev = document.getElementById("btnPrev");
-const btnNext = document.getElementById("btnNext");
-const stage = document.getElementById("stage");
+let currentPage = 0;
 
-function render() {
-  const p = PAGES[current];
-  pageImage.src = p.img;
-  captionText.textContent = p.text;
-  pageInfo.textContent = `${current + 1} / ${PAGES.length}`;
-  progressBar.style.width = `${((current + 1) / PAGES.length) * 100}%`;
-  btnPrev.disabled = current === 0;
-  btnNext.disabled = current === PAGES.length - 1;
+const imageEl = document.getElementById('image');
+const textEl = document.getElementById('text');
+const prevBtn = document.getElementById('prevButton');
+const nextBtn = document.getElementById('nextButton');
+const progressBar = document.getElementById('progress-bar');
+
+// Update the page content, controls, and progress bar
+function updatePage() {
+  const page = PAGES[currentPage];
+  imageEl.src = page.img;
+  textEl.textContent = page.text;
+  prevBtn.disabled = currentPage === 0;
+  nextBtn.disabled = currentPage === PAGES.length - 1;
+  progressBar.style.width = ((currentPage + 1) / PAGES.length * 100) + '%';
 }
 
-function go(delta) {
-  const next = Math.min(PAGES.length - 1, Math.max(0, current + delta));
-  if (next !== current) {
-    current = next;
-    render();
-    stage.focus();
+// Navigate to the previous page
+prevBtn.addEventListener('click', () => {
+  if (currentPage > 0) {
+    currentPage--;
+    updatePage();
   }
-}
-
-btnPrev.addEventListener("click", () => go(-1));
-btnNext.addEventListener("click", () => go(1));
-document.addEventListener("keydown", (e) => {
-  if (e.key === "ArrowLeft") go(-1);
-  if (e.key === "ArrowRight") go(1);
 });
 
-// Basic touch swipe
-let startX = null;
-stage.addEventListener("touchstart", (e) => { startX = e.changedTouches[0].clientX; }, {passive:true});
-stage.addEventListener("touchend", (e) => {
-  if (startX === null) return;
-  const dx = e.changedTouches[0].clientX - startX;
-  if (dx > 30) go(-1);
-  if (dx < -30) go(1);
-  startX = null;
-}, {passive:true});
+// Navigate to the next page
+nextBtn.addEventListener('click', () => {
+  if (currentPage < PAGES.length - 1) {
+    currentPage++;
+    updatePage();
+  }
+});
 
-// Initial render
-render();
+// Enable keyboard navigation (left/right arrows)
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowLeft') {
+    prevBtn.click();
+  } else if (e.key === 'ArrowRight') {
+    nextBtn.click();
+  }
+});
+
+// Enable simple swipe navigation on touch devices
+let touchStartX = null;
+imageEl.addEventListener('touchstart', (e) => {
+  touchStartX = e.touches[0].clientX;
+});
+imageEl.addEventListener('touchend', (e) => {
+  if (touchStartX !== null) {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (dx > 30) {
+      prevBtn.click();
+    } else if (dx < -30) {
+      nextBtn.click();
+    }
+    touchStartX = null;
+  }
+});
+
+// Initialize the first page
+updatePage();
